@@ -1,13 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import { PostDTO } from "../type/post";
-import { get } from "../lib/backend/client";
+import { apiFetch } from "../lib/backend/client";
+import Link from "next/link";
 
 export default function Page() {
   const [posts, setPosts] = useState<PostDTO[] | null>(null);
 
   useEffect(() => {
-    get("/api/v1/posts").then(setPosts);
+    apiFetch("/posts").then(setPosts);
   }, []);
 
   return (
@@ -17,7 +18,9 @@ export default function Page() {
       {
         <ul>
           {posts?.map((post) => (
-            <li key={post.id}>{post.title}</li>
+            <li key={post.id}>
+              <Link href={`/posts/${post.id}`}>{post.title}</Link>
+            </li>
           ))}
         </ul>
       }
