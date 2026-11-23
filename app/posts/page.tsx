@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { PostDTO } from "../type/post";
 import { apiFetch } from "../lib/backend/client";
 import Link from "next/link";
-
 export default function Page() {
   const [posts, setPosts] = useState<PostDTO[] | null>(null);
 
