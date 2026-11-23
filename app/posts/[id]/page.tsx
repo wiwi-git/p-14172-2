@@ -1,6 +1,6 @@
 "use client";
 import { apiFetch } from "@/app/lib/backend/client";
-import { PostWithContentDTO } from "@/app/type/post";
+import { PostCommentDTO, PostWithContentDTO } from "@/app/type/post";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Loading from "./loading";
@@ -9,6 +9,9 @@ export default function Page() {
   const router = useRouter();
   const { id: rawId } = useParams<{ id: string }>();
   const [post, setPost] = useState<PostWithContentDTO | null>(null);
+  const [postComments, setPostComments] = useState<PostCommentDTO[] | null>(
+    null,
+  );
 
   const deletePost = (id: number) => {
     apiFetch(`/posts/${id}`, {
@@ -22,6 +25,7 @@ export default function Page() {
   useEffect(() => {
     const id = Number(rawId);
     apiFetch(`/posts/${id}`).then(setPost);
+    apiFetch(`/posts/${id}/comments`).then(setPostComments);
   }, []);
 
   if (post == null) return Loading();
@@ -46,6 +50,21 @@ export default function Page() {
           edit
         </button>
       </div>
+
+      <h2>comment list</h2>
+      {postComments == null && <div>댓글 로딩중...</div>}
+      {postComments != null && postComments.length == 0 && (
+        <div>댓글이 없습니다.</div>
+      )}
+      {postComments != null && postComments.length > 0 && (
+        <ul>
+          {postComments.map((comment) => (
+            <li key={comment.id}>
+              {comment.id} : {comment.content}
+            </li>
+          ))}
+        </ul>
+      )}
     </>
   );
 }
