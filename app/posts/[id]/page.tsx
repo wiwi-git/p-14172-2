@@ -41,6 +41,11 @@ export default function Page() {
           delete
         </button>
       </div>
+      <div>
+        <button onClick={() => router.push(`/posts/${post.id}/edit`)}>
+          edit
+        </button>
+      </div>
     </>
   );
 }
