@@ -33,6 +33,35 @@ export default function Page() {
     });
   };
 
+  const writePostComment = (
+    event: React.SyntheticEvent<HTMLFormElement>,
+    postId: number,
+  ) => {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    const contentTextarea = form.elements.namedItem(
+      "content",
+    ) as HTMLTextAreaElement;
+
+    const content = contentTextarea.value.trim();
+
+    if (content.length < 2) {
+      alert("댓글을 2자 이상 입력해주세요.");
+      contentTextarea.focus();
+      return;
+    }
+
+    apiFetch(`/posts/${postId}/comments`, {
+      method: "POST",
+      body: JSON.stringify({ content: content }),
+    }).then((res) => {
+      alert(res.msg);
+      setPostComments((prev) => [...(prev ?? []), res.data]);
+      form.reset();
+    });
+  };
+
   useEffect(() => {
     const id = Number(rawId);
     apiFetch(`/posts/${id}`).then(setPost);
@@ -61,6 +90,23 @@ export default function Page() {
           edit
         </button>
       </div>
+
+      <h2>comment write</h2>
+      <form
+        className="flex flex-col gap-2 p-2"
+        onSubmit={(event) => writePostComment(event, post.id)}
+      >
+        <textarea
+          className="border p-2 rounded"
+          name="content"
+          placeholder="댓글 내용"
+          maxLength={100}
+          rows={3}
+        />
+        <button className="border p-2 rounded" type="submit">
+          작성
+        </button>
+      </form>
 
       <h2>comment list</h2>
       {postComments == null && <div>댓글 로딩중...</div>}
