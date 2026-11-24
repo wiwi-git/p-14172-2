@@ -20,8 +20,9 @@ function PostInfo({
       <h1>post</h1>
       <div>id : {post.id}</div>
       <div>title : {post.title}</div>
+      <div className="whitespace-pre-line">content : {post.content}</div>
 
-      <div className="flex gap-2">
+      <div className="flex gap-2 border-t mt-2 pt-2">
         <Button
           onClick={() =>
             confirm("글을 삭제 하시겠습니까?") && deletePost(post.id)
@@ -73,7 +74,7 @@ function PostCommentWriteAndList({
 
   return (
     <>
-      <h2>comment write</h2>
+      <h2 className="mt-[18px]">comment write</h2>
       <form
         className="flex flex-col gap-2 p-2"
         onSubmit={commentWriteSubmitHandler}
@@ -88,7 +89,7 @@ function PostCommentWriteAndList({
         <Button type="submit">작성</Button>
       </form>
 
-      <h2>comment list</h2>
+      <h2 className="mt-[18px] border-t pt-2">comment list</h2>
       {postComments == null && <div>댓글 로딩중...</div>}
       {postComments != null && postComments.length == 0 && (
         <div>댓글이 없습니다.</div>
