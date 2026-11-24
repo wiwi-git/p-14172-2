@@ -23,6 +23,22 @@ export default function usePostComments(postId: number) {
     });
   };
 
+  const modifyPostComment = (commentId: number, content: string) => {
+    return apiFetch(`/posts/${postId}/comments/${commentId}`, {
+      method: "PUT",
+      body: JSON.stringify({ content: content }),
+    }).then((res) => {
+      alert(res.msg);
+      // 응답에 수정된 댓글이 없어서 목록의 내용만 직접 바꿈
+      setPostComments(
+        (prev) =>
+          prev?.map((comment) =>
+            comment.id === commentId ? { ...comment, content } : comment,
+          ) ?? null,
+      );
+    });
+  };
+
   const deletePostComment = (commentId: number) => {
     apiFetch(`/posts/${postId}/comments/${commentId}`, {
       method: "DELETE",
@@ -37,5 +53,10 @@ export default function usePostComments(postId: number) {
       .catch((error) => alert(error.msg ?? error.message));
   };
 
-  return { postComments, writePostComment, deletePostComment };
+  return {
+    postComments,
+    writePostComment,
+    modifyPostComment,
+    deletePostComment,
+  };
 }

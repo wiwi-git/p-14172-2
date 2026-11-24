@@ -1,7 +1,8 @@
 "use client";
 import Button from "@/app/components/Button";
-import { PostWithContentDTO } from "@/app/type/post";
+import { PostCommentDTO, PostWithContentDTO } from "@/app/type/post";
 import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import Loading from "./loading";
 import usePost from "./_hooks/usePost";
 import usePostComments from "./_hooks/usePostComments";
@@ -83,15 +84,74 @@ function PostCommentWrite({
   );
 }
 
-function PostCommentList({
-  postComments,
+function PostCommentListItem({
+  comment,
+  modifyPostComment: _modifyPostComment,
   deletePostComment: _deletePostComment,
-}: PostCommentsProps) {
-  const deletePostComment = (commentId: number) => {
+}: PostCommentsProps & { comment: PostCommentDTO }) {
+  const [modifyMode, setModifyMode] = useState(false);
+
+  const toggleModifyMode = () => {
+    setModifyMode(!modifyMode);
+  };
+
+  const deletePostComment = () => {
     if (!confirm("댓글을 삭제 하시겠습니까?")) return;
 
-    _deletePostComment(commentId);
+    _deletePostComment(comment.id);
   };
+
+  const modifyPostComment = (event: React.SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    const contentInput = form.elements.namedItem("content") as HTMLInputElement;
+
+    const content = contentInput.value.trim();
+
+    if (content.length < 2) {
+      alert("댓글을 2자 이상 입력해주세요.");
+      contentInput.focus();
+      return;
+    }
+
+    _modifyPostComment(comment.id, content)
+      .then(() => setModifyMode(false))
+      .catch((error) => alert(error.msg ?? error.message));
+  };
+
+  if (modifyMode) {
+    return (
+      <li>
+        <form className="flex items-center gap-2" onSubmit={modifyPostComment}>
+          {comment.id} :
+          <input
+            className="border p-1.5 rounded flex-1"
+            type="text"
+            name="content"
+            placeholder="댓글 내용"
+            maxLength={100}
+            defaultValue={comment.content}
+            autoFocus
+          />
+          <Button type="submit">저장</Button>
+          <Button onClick={toggleModifyMode}>취소</Button>
+        </form>
+      </li>
+    );
+  }
+
+  return (
+    <li className="flex items-center gap-2">
+      {comment.id} : {comment.content}
+      <Button onClick={deletePostComment}>delete</Button>
+      <Button onClick={toggleModifyMode}>modify</Button>
+    </li>
+  );
+}
+
+function PostCommentList(props: PostCommentsProps) {
+  const { postComments } = props;
 
   return (
     <>
@@ -102,12 +162,7 @@ function PostCommentList({
       {postComments != null && postComments.length > 0 && (
         <ul>
           {postComments.map((comment) => (
-            <li key={comment.id} className="flex items-center gap-2">
-              {comment.id} : {comment.content}
-              <Button onClick={() => deletePostComment(comment.id)}>
-                delete
-              </Button>
-            </li>
+            <PostCommentListItem key={comment.id} {...props} comment={comment} />
           ))}
         </ul>
       )}
