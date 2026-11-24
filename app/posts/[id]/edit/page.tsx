@@ -2,23 +2,19 @@
 
 import Button from "@/app/components/Button";
 import { alertError, apiFetch } from "@/app/lib/backend/client";
-import { PostWithContentDTO } from "@/app/type/post";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import Loading from "../loading";
+import PostLoadFailed from "../_components/PostLoadFailed";
+import usePost from "../_hooks/usePost";
 
 export default function Page() {
   const router = useRouter();
   const { id: rawId } = useParams<{ id: string }>();
-  const [post, setPost] = useState<PostWithContentDTO | null>(null);
+  const id = Number(rawId);
 
-  useEffect(() => {
-    const id = Number(rawId);
-    apiFetch(`/posts/${id}`)
-      .then(setPost)
-      .catch(alertError);
-  }, []);
+  const { post, isLoadFailed } = usePost(id);
 
+  if (isLoadFailed) return <PostLoadFailed />;
   if (post == null) return Loading();
 
   const submitHandler = (event: React.SyntheticEvent<HTMLFormElement>) => {

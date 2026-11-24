@@ -4,6 +4,7 @@ import { PostCommentDTO, PostWithContentDTO } from "@/app/type/post";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import Loading from "./loading";
+import PostLoadFailed from "./_components/PostLoadFailed";
 import usePost from "./_hooks/usePost";
 import usePostComments from "./_hooks/usePostComments";
 
@@ -201,7 +202,8 @@ export default function Page() {
   const postState = usePost(id);
   const postCommentsState = usePostComments(id);
 
-  const { post } = postState;
+  const { post, isLoadFailed } = postState;
+  if (isLoadFailed) return <PostLoadFailed />;
   if (post == null) return Loading();
 
   return (
