@@ -12,6 +12,14 @@ export const apiFetch = (url: string, options?: RequestInit) => {
   }
 
   return fetch(`${NEXT_PUBLIC_API_BASE_URL}${apiVersion}${url}`, options).then(
-    (res) => res.json(),
+    (res) => {
+      if (!res.ok) {
+        return res.json().then((errorData) => {
+          throw errorData;
+        });
+      }
+
+      return res.json();
+    },
   );
 };

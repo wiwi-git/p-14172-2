@@ -7,7 +7,9 @@ export default function Page() {
   const [posts, setPosts] = useState<PostDTO[] | null>(null);
 
   useEffect(() => {
-    apiFetch("/posts").then(setPosts);
+    apiFetch("/posts")
+      .then(setPosts)
+      .catch((error) => alert(error.msg ?? error.message));
   }, []);
 
   return (

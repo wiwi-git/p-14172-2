@@ -16,21 +16,26 @@ export default function Page() {
   const deletePost = (id: number) => {
     apiFetch(`/posts/${id}`, {
       method: "DELETE",
-    }).then((res) => {
-      alert(res.msg);
-      router.replace("/posts");
-    });
+    })
+      .then((res) => {
+        alert(res.msg);
+        router.replace("/posts");
+      })
+      .catch((error) => alert(error.msg ?? error.message));
   };
 
   const deletePostComment = (postId: number, commentId: number) => {
     apiFetch(`/posts/${postId}/comments/${commentId}`, {
       method: "DELETE",
-    }).then((res) => {
-      alert(res.msg);
-      setPostComments(
-        (prev) => prev?.filter((comment) => comment.id !== commentId) ?? null,
-      );
-    });
+    })
+      .then((res) => {
+        alert(res.msg);
+        setPostComments(
+          (prev) =>
+            prev?.filter((comment) => comment.id !== commentId) ?? null,
+        );
+      })
+      .catch((error) => alert(error.msg ?? error.message));
   };
 
   const writePostComment = (postId: number, content: string) => {
@@ -45,8 +50,12 @@ export default function Page() {
 
   useEffect(() => {
     const id = Number(rawId);
-    apiFetch(`/posts/${id}`).then(setPost);
-    apiFetch(`/posts/${id}/comments`).then(setPostComments);
+    apiFetch(`/posts/${id}`)
+      .then(setPost)
+      .catch((error) => alert(error.msg ?? error.message));
+    apiFetch(`/posts/${id}/comments`)
+      .then(setPostComments)
+      .catch((error) => alert(error.msg ?? error.message));
   }, []);
 
   if (post == null) return Loading();
@@ -69,7 +78,9 @@ export default function Page() {
       return;
     }
 
-    writePostComment(post.id, content).then(() => form.reset());
+    writePostComment(post.id, content)
+      .then(() => form.reset())
+      .catch((error) => alert(error.msg ?? error.message));
   };
 
   return (

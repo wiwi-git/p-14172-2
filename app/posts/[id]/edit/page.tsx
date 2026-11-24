@@ -13,7 +13,9 @@ export default function Page() {
 
   useEffect(() => {
     const id = Number(rawId);
-    apiFetch(`/posts/${id}`).then(setPost);
+    apiFetch(`/posts/${id}`)
+      .then(setPost)
+      .catch((error) => alert(error.msg ?? error.message));
   }, []);
 
   if (post == null) return Loading();
@@ -45,10 +47,12 @@ export default function Page() {
     apiFetch(`/posts/${post.id}`, {
       method: "PUT",
       body: JSON.stringify({ title: title, content: content }),
-    }).then((res) => {
-      alert(res.msg);
-      router.replace(`/posts/${post.id}`);
-    });
+    })
+      .then((res) => {
+        alert(res.msg);
+        router.replace(`/posts/${post.id}`);
+      })
+      .catch((error) => alert(error.msg ?? error.message));
   };
 
   return (

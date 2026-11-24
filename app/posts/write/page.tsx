@@ -32,10 +32,12 @@ export default function Page() {
     apiFetch("/posts", {
       method: "POST",
       body: JSON.stringify({ title: title, content: content }),
-    }).then((res) => {
-      alert(res.msg);
-      router.replace(`/posts/${res.data.id}`);
-    });
+    })
+      .then((res) => {
+        alert(res.msg);
+        router.replace(`/posts/${res.data.id}`);
+      })
+      .catch((error) => alert(error.msg ?? error.message));
   };
 
   return (
