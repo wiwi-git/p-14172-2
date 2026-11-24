@@ -105,13 +105,15 @@ function PostCommentListItem({
     event.preventDefault();
 
     const form = event.currentTarget;
-    const contentInput = form.elements.namedItem("content") as HTMLInputElement;
+    const contentTextarea = form.elements.namedItem(
+      "content",
+    ) as HTMLTextAreaElement;
 
-    const content = contentInput.value.trim();
+    const content = contentTextarea.value.trim();
 
     if (content.length < 2) {
       alert("댓글을 2자 이상 입력해주세요.");
-      contentInput.focus();
+      contentTextarea.focus();
       return;
     }
 
@@ -125,12 +127,12 @@ function PostCommentListItem({
       <li>
         <form className="flex items-center gap-2" onSubmit={modifyPostComment}>
           {comment.id} :
-          <input
+          <textarea
             className="border p-1.5 rounded flex-1"
-            type="text"
             name="content"
             placeholder="댓글 내용"
             maxLength={100}
+            rows={3}
             defaultValue={comment.content}
             autoFocus
           />
@@ -143,7 +145,9 @@ function PostCommentListItem({
 
   return (
     <li className="flex items-center gap-2">
-      {comment.id} : {comment.content}
+      <span className="whitespace-pre-line">
+        {comment.id} : {comment.content}
+      </span>
       <Button onClick={deletePostComment}>delete</Button>
       <Button onClick={toggleModifyMode}>modify</Button>
     </li>
