@@ -38,12 +38,9 @@ function PostInfo({
   );
 }
 
-function PostCommentWriteAndList({
-  post,
-  postComments,
-  writePostComment,
-  deletePostComment,
-}: ReturnType<typeof usePostComments> & LoadedPost) {
+type PostCommentsProps = ReturnType<typeof usePostComments> & LoadedPost;
+
+function PostCommentWrite({ post, writePostComment }: PostCommentsProps) {
   const commentWriteSubmitHandler = (
     event: React.SyntheticEvent<HTMLFormElement>,
   ) => {
@@ -83,7 +80,17 @@ function PostCommentWriteAndList({
         />
         <Button type="submit">작성</Button>
       </form>
+    </>
+  );
+}
 
+function PostCommentList({
+  post,
+  postComments,
+  deletePostComment,
+}: PostCommentsProps) {
+  return (
+    <>
       <h2 className="mt-[18px] border-t pt-2">comment list</h2>
       {postComments == null && <div>댓글 로딩중...</div>}
       {postComments != null && postComments.length == 0 && (
@@ -106,6 +113,15 @@ function PostCommentWriteAndList({
           ))}
         </ul>
       )}
+    </>
+  );
+}
+
+function PostCommentWriteAndList(props: PostCommentsProps) {
+  return (
+    <>
+      <PostCommentWrite {...props} />
+      <PostCommentList {...props} />
     </>
   );
 }
