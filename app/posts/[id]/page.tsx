@@ -125,7 +125,7 @@ function PostCommentListItem({
   if (modifyMode) {
     return (
       <li>
-        <form className="flex items-center gap-2" onSubmit={modifyPostComment}>
+        <form className="flex items-start gap-2" onSubmit={modifyPostComment}>
           {comment.id} :
           <textarea
             className="border p-1.5 rounded flex-1"
@@ -144,7 +144,7 @@ function PostCommentListItem({
   }
 
   return (
-    <li className="flex items-center gap-2">
+    <li className="flex items-start gap-2">
       <span className="whitespace-pre-line">
         {comment.id} : {comment.content}
       </span>
