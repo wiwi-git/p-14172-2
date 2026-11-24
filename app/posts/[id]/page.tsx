@@ -92,7 +92,6 @@ function PostCommentList({
   return (
     <>
       <h2 className="mt-[18px] border-t pt-2">comment list</h2>
-      {postComments == null && <div>댓글 로딩중...</div>}
       {postComments != null && postComments.length == 0 && (
         <div>댓글이 없습니다.</div>
       )}
