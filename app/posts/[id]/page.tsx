@@ -1,10 +1,10 @@
 "use client";
 import Button from "@/app/components/Button";
-import { apiFetch } from "@/app/lib/backend/client";
 import { PostCommentDTO, PostWithContentDTO } from "@/app/type/post";
 import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
 import Loading from "./loading";
+import usePost from "./_hooks/usePost";
+import usePostComments from "./_hooks/usePostComments";
 
 function PostInfo({
   post,
@@ -116,57 +116,12 @@ function PostCommentWriteAndList({
 }
 
 export default function Page() {
-  const router = useRouter();
   const { id: rawId } = useParams<{ id: string }>();
-  const [post, setPost] = useState<PostWithContentDTO | null>(null);
-  const [postComments, setPostComments] = useState<PostCommentDTO[] | null>(
-    null,
-  );
+  const id = Number(rawId);
 
-  const deletePost = (id: number) => {
-    apiFetch(`/posts/${id}`, {
-      method: "DELETE",
-    })
-      .then((res) => {
-        alert(res.msg);
-        router.replace("/posts");
-      })
-      .catch((error) => alert(error.msg ?? error.message));
-  };
-
-  const deletePostComment = (postId: number, commentId: number) => {
-    apiFetch(`/posts/${postId}/comments/${commentId}`, {
-      method: "DELETE",
-    })
-      .then((res) => {
-        alert(res.msg);
-        setPostComments(
-          (prev) =>
-            prev?.filter((comment) => comment.id !== commentId) ?? null,
-        );
-      })
-      .catch((error) => alert(error.msg ?? error.message));
-  };
-
-  const writePostComment = (postId: number, content: string) => {
-    return apiFetch(`/posts/${postId}/comments`, {
-      method: "POST",
-      body: JSON.stringify({ content: content }),
-    }).then((res) => {
-      alert(res.msg);
-      setPostComments((prev) => [...(prev ?? []), res.data]);
-    });
-  };
-
-  useEffect(() => {
-    const id = Number(rawId);
-    apiFetch(`/posts/${id}`)
-      .then(setPost)
-      .catch((error) => alert(error.msg ?? error.message));
-    apiFetch(`/posts/${id}/comments`)
-      .then(setPostComments)
-      .catch((error) => alert(error.msg ?? error.message));
-  }, []);
+  const { post, deletePost } = usePost(id);
+  const { postComments, writePostComment, deletePostComment } =
+    usePostComments(id);
 
   if (post == null) return Loading();
 
