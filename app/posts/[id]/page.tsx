@@ -1,18 +1,18 @@
 "use client";
 import Button from "@/app/components/Button";
-import { PostCommentDTO, PostWithContentDTO } from "@/app/type/post";
+import { PostWithContentDTO } from "@/app/type/post";
 import { useParams, useRouter } from "next/navigation";
 import Loading from "./loading";
 import usePost from "./_hooks/usePost";
 import usePostComments from "./_hooks/usePostComments";
 
+// 훅의 post는 null일 수 있지만, 컴포넌트는 로딩이 끝난 post만 받음
+type LoadedPost = { post: PostWithContentDTO };
+
 function PostInfo({
   post,
   deletePost,
-}: {
-  post: PostWithContentDTO;
-  deletePost: (id: number) => void;
-}) {
+}: ReturnType<typeof usePost> & LoadedPost) {
   const router = useRouter();
 
   return (
@@ -43,12 +43,7 @@ function PostCommentWriteAndList({
   postComments,
   writePostComment,
   deletePostComment,
-}: {
-  post: PostWithContentDTO;
-  postComments: PostCommentDTO[] | null;
-  writePostComment: (postId: number, content: string) => Promise<void>;
-  deletePostComment: (postId: number, commentId: number) => void;
-}) {
+}: ReturnType<typeof usePostComments> & LoadedPost) {
   const commentWriteSubmitHandler = (
     event: React.SyntheticEvent<HTMLFormElement>,
   ) => {
@@ -119,21 +114,16 @@ export default function Page() {
   const { id: rawId } = useParams<{ id: string }>();
   const id = Number(rawId);
 
-  const { post, deletePost } = usePost(id);
-  const { postComments, writePostComment, deletePostComment } =
-    usePostComments(id);
+  const postState = usePost(id);
+  const postCommentsState = usePostComments(id);
 
+  const { post } = postState;
   if (post == null) return Loading();
 
   return (
     <>
-      <PostInfo post={post} deletePost={deletePost} />
-      <PostCommentWriteAndList
-        post={post}
-        postComments={postComments}
-        writePostComment={writePostComment}
-        deletePostComment={deletePostComment}
-      />
+      <PostInfo {...postState} post={post} />
+      <PostCommentWriteAndList {...postCommentsState} post={post} />
     </>
   );
 }
