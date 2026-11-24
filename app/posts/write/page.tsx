@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/app/components/Button";
 import { apiFetch } from "@/app/lib/backend/client";
 import { useRouter } from "next/navigation";
 
@@ -57,9 +58,9 @@ export default function Page() {
           maxLength={5000}
           rows={10}
         />
-        <button className="border p-2 rounded" type="submit">
+        <Button type="submit">
           저장
-        </button>
+        </Button>
       </form>
     </>
   );

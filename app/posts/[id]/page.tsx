@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/app/components/Button";
 import { apiFetch } from "@/app/lib/backend/client";
 import { PostCommentDTO, PostWithContentDTO } from "@/app/type/post";
 import { useParams, useRouter } from "next/navigation";
@@ -20,19 +21,17 @@ function PostInfo({
       <div>id : {post.id}</div>
       <div>title : {post.title}</div>
 
-      <div>
-        <button
+      <div className="flex gap-2">
+        <Button
           onClick={() =>
             confirm("글을 삭제 하시겠습니까?") && deletePost(post.id)
           }
         >
           delete
-        </button>
-      </div>
-      <div>
-        <button onClick={() => router.push(`/posts/${post.id}/edit`)}>
+        </Button>
+        <Button onClick={() => router.push(`/posts/${post.id}/edit`)}>
           edit
-        </button>
+        </Button>
       </div>
     </>
   );
@@ -86,9 +85,7 @@ function PostCommentWriteAndList({
           maxLength={100}
           rows={3}
         />
-        <button className="border p-2 rounded" type="submit">
-          작성
-        </button>
+        <Button type="submit">작성</Button>
       </form>
 
       <h2>comment list</h2>
@@ -99,16 +96,16 @@ function PostCommentWriteAndList({
       {postComments != null && postComments.length > 0 && (
         <ul>
           {postComments.map((comment) => (
-            <li key={comment.id}>
+            <li key={comment.id} className="flex items-center gap-2">
               {comment.id} : {comment.content}
-              <button
+              <Button
                 onClick={() =>
                   confirm("댓글을 삭제 하시겠습니까?") &&
                   deletePostComment(post.id, comment.id)
                 }
               >
                 delete
-              </button>
+              </Button>
             </li>
           ))}
         </ul>

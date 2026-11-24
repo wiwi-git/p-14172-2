@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/app/components/Button";
 import { apiFetch } from "@/app/lib/backend/client";
 import { PostWithContentDTO } from "@/app/type/post";
 import { useParams, useRouter } from "next/navigation";
@@ -74,9 +75,9 @@ export default function Page() {
           rows={10}
           defaultValue={post.content}
         />
-        <button className="border p-2 rounded" type="submit">
+        <Button type="submit">
           저장
-        </button>
+        </Button>
       </form>
     </>
   );
