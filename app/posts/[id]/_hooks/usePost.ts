@@ -13,7 +13,7 @@ export default function usePost(id: number) {
       .catch((error) => alert(error.msg ?? error.message));
   }, [id]);
 
-  const deletePost = (id: number) => {
+  const deletePost = () => {
     apiFetch(`/posts/${id}`, {
       method: "DELETE",
     })

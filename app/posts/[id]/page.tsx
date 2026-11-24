@@ -18,7 +18,7 @@ function PostInfo({
   const deletePost = () => {
     if (!confirm("글을 삭제 하시겠습니까?")) return;
 
-    _deletePost(post.id);
+    _deletePost();
   };
 
   const editPost = () => {
@@ -40,10 +40,9 @@ function PostInfo({
   );
 }
 
-type PostCommentsProps = ReturnType<typeof usePostComments> & LoadedPost;
+type PostCommentsProps = ReturnType<typeof usePostComments>;
 
 function PostCommentWrite({
-  post,
   writePostComment: _writePostComment,
 }: PostCommentsProps) {
   const writePostComment = (event: React.SyntheticEvent<HTMLFormElement>) => {
@@ -62,7 +61,7 @@ function PostCommentWrite({
       return;
     }
 
-    _writePostComment(post.id, content)
+    _writePostComment(content)
       .then(() => form.reset())
       .catch((error) => alert(error.msg ?? error.message));
   };
@@ -85,14 +84,13 @@ function PostCommentWrite({
 }
 
 function PostCommentList({
-  post,
   postComments,
   deletePostComment: _deletePostComment,
 }: PostCommentsProps) {
   const deletePostComment = (commentId: number) => {
     if (!confirm("댓글을 삭제 하시겠습니까?")) return;
 
-    _deletePostComment(post.id, commentId);
+    _deletePostComment(commentId);
   };
 
   return (
@@ -139,7 +137,7 @@ export default function Page() {
   return (
     <>
       <PostInfo {...postState} post={post} />
-      <PostCommentWriteAndList {...postCommentsState} post={post} />
+      <PostCommentWriteAndList {...postCommentsState} />
     </>
   );
 }

@@ -13,7 +13,7 @@ export default function usePostComments(postId: number) {
       .catch((error) => alert(error.msg ?? error.message));
   }, [postId]);
 
-  const writePostComment = (postId: number, content: string) => {
+  const writePostComment = (content: string) => {
     return apiFetch(`/posts/${postId}/comments`, {
       method: "POST",
       body: JSON.stringify({ content: content }),
@@ -23,7 +23,7 @@ export default function usePostComments(postId: number) {
     });
   };
 
-  const deletePostComment = (postId: number, commentId: number) => {
+  const deletePostComment = (commentId: number) => {
     apiFetch(`/posts/${postId}/comments/${commentId}`, {
       method: "DELETE",
     })
