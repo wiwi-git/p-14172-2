@@ -124,30 +124,34 @@ function PostCommentListItem({
   };
 
   return (
-    <li className="flex items-start gap-2">
-      <span>{comment.id} :</span>
-      {!modifyMode && (
-        <span className="whitespace-pre-line">{comment.content}</span>
-      )}
-      {modifyMode && (
-        <form
-          className="flex flex-1 items-start gap-2"
-          onSubmit={modifyPostComment}
-        >
-          <textarea
-            className="border p-1.5 rounded flex-1"
-            name="content"
-            placeholder="댓글 내용"
-            maxLength={100}
-            rows={3}
-            defaultValue={comment.content}
-            autoFocus
-          />
-          <Button type="submit">저장</Button>
-        </form>
-      )}
-      <Button onClick={deletePostComment}>delete</Button>
-      <Button onClick={toggleModifyMode}>modify</Button>
+    <li className="flex flex-col gap-2 mb-4">
+      <div className="flex items-start gap-2">
+        <span>{comment.id} :</span>
+        {!modifyMode && (
+          <span className="whitespace-pre-line">{comment.content}</span>
+        )}
+        {modifyMode && (
+          <form
+            className="flex flex-1 items-start gap-2"
+            onSubmit={modifyPostComment}
+          >
+            <textarea
+              className="border p-1.5 rounded flex-1"
+              name="content"
+              placeholder="댓글 내용"
+              maxLength={100}
+              rows={3}
+              defaultValue={comment.content}
+              autoFocus
+            />
+            <Button type="submit">저장</Button>
+          </form>
+        )}
+      </div>
+      <div className="flex gap-2">
+        <Button onClick={deletePostComment}>delete</Button>
+        <Button onClick={toggleModifyMode}>modify</Button>
+      </div>
     </li>
   );
 }
