@@ -11,9 +11,19 @@ type LoadedPost = { post: PostWithContentDTO };
 
 function PostInfo({
   post,
-  deletePost,
+  deletePost: _deletePost,
 }: ReturnType<typeof usePost> & LoadedPost) {
   const router = useRouter();
+
+  const deletePost = () => {
+    if (!confirm("글을 삭제 하시겠습니까?")) return;
+
+    _deletePost(post.id);
+  };
+
+  const editPost = () => {
+    router.push(`/posts/${post.id}/edit`);
+  };
 
   return (
     <>
@@ -23,16 +33,8 @@ function PostInfo({
       <div className="whitespace-pre-line">content : {post.content}</div>
 
       <div className="flex gap-2 border-t mt-2 pt-2">
-        <Button
-          onClick={() =>
-            confirm("글을 삭제 하시겠습니까?") && deletePost(post.id)
-          }
-        >
-          delete
-        </Button>
-        <Button onClick={() => router.push(`/posts/${post.id}/edit`)}>
-          edit
-        </Button>
+        <Button onClick={deletePost}>delete</Button>
+        <Button onClick={editPost}>edit</Button>
       </div>
     </>
   );
@@ -40,10 +42,11 @@ function PostInfo({
 
 type PostCommentsProps = ReturnType<typeof usePostComments> & LoadedPost;
 
-function PostCommentWrite({ post, writePostComment }: PostCommentsProps) {
-  const commentWriteSubmitHandler = (
-    event: React.SyntheticEvent<HTMLFormElement>,
-  ) => {
+function PostCommentWrite({
+  post,
+  writePostComment: _writePostComment,
+}: PostCommentsProps) {
+  const writePostComment = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const form = event.currentTarget;
@@ -59,7 +62,7 @@ function PostCommentWrite({ post, writePostComment }: PostCommentsProps) {
       return;
     }
 
-    writePostComment(post.id, content)
+    _writePostComment(post.id, content)
       .then(() => form.reset())
       .catch((error) => alert(error.msg ?? error.message));
   };
@@ -67,10 +70,7 @@ function PostCommentWrite({ post, writePostComment }: PostCommentsProps) {
   return (
     <>
       <h2 className="mt-[18px]">comment write</h2>
-      <form
-        className="flex flex-col gap-2 p-2"
-        onSubmit={commentWriteSubmitHandler}
-      >
+      <form className="flex flex-col gap-2 p-2" onSubmit={writePostComment}>
         <textarea
           className="border p-2 rounded"
           name="content"
@@ -87,8 +87,14 @@ function PostCommentWrite({ post, writePostComment }: PostCommentsProps) {
 function PostCommentList({
   post,
   postComments,
-  deletePostComment,
+  deletePostComment: _deletePostComment,
 }: PostCommentsProps) {
+  const deletePostComment = (commentId: number) => {
+    if (!confirm("댓글을 삭제 하시겠습니까?")) return;
+
+    _deletePostComment(post.id, commentId);
+  };
+
   return (
     <>
       <h2 className="mt-[18px] border-t pt-2">comment list</h2>
@@ -100,12 +106,7 @@ function PostCommentList({
           {postComments.map((comment) => (
             <li key={comment.id} className="flex items-center gap-2">
               {comment.id} : {comment.content}
-              <Button
-                onClick={() =>
-                  confirm("댓글을 삭제 하시겠습니까?") &&
-                  deletePostComment(post.id, comment.id)
-                }
-              >
+              <Button onClick={() => deletePostComment(comment.id)}>
                 delete
               </Button>
             </li>

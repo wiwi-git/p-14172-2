@@ -15,6 +15,10 @@ export default function Page() {
       .catch((error) => alert(error.msg ?? error.message));
   }, []);
 
+  const writePost = () => {
+    router.push("/posts/write");
+  };
+
   return (
     <>
       <h1>post list</h1>
@@ -30,7 +34,7 @@ export default function Page() {
       }
 
       <div className="border-t mt-2 pt-2">
-        <Button onClick={() => router.push("/posts/write")}>글쓰기</Button>
+        <Button onClick={writePost}>글쓰기</Button>
       </div>
     </>
   );
