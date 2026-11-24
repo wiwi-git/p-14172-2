@@ -33,9 +33,26 @@ export default function Page() {
     });
   };
 
-  const writePostComment = (
+  const writePostComment = (postId: number, content: string) => {
+    return apiFetch(`/posts/${postId}/comments`, {
+      method: "POST",
+      body: JSON.stringify({ content: content }),
+    }).then((res) => {
+      alert(res.msg);
+      setPostComments((prev) => [...(prev ?? []), res.data]);
+    });
+  };
+
+  useEffect(() => {
+    const id = Number(rawId);
+    apiFetch(`/posts/${id}`).then(setPost);
+    apiFetch(`/posts/${id}/comments`).then(setPostComments);
+  }, []);
+
+  if (post == null) return Loading();
+
+  const commentWriteSubmitHandler = (
     event: React.SyntheticEvent<HTMLFormElement>,
-    postId: number,
   ) => {
     event.preventDefault();
 
@@ -52,23 +69,8 @@ export default function Page() {
       return;
     }
 
-    apiFetch(`/posts/${postId}/comments`, {
-      method: "POST",
-      body: JSON.stringify({ content: content }),
-    }).then((res) => {
-      alert(res.msg);
-      setPostComments((prev) => [...(prev ?? []), res.data]);
-      form.reset();
-    });
+    writePostComment(post.id, content).then(() => form.reset());
   };
-
-  useEffect(() => {
-    const id = Number(rawId);
-    apiFetch(`/posts/${id}`).then(setPost);
-    apiFetch(`/posts/${id}/comments`).then(setPostComments);
-  }, []);
-
-  if (post == null) return Loading();
 
   return (
     <>
@@ -94,7 +96,7 @@ export default function Page() {
       <h2>comment write</h2>
       <form
         className="flex flex-col gap-2 p-2"
-        onSubmit={(event) => writePostComment(event, post.id)}
+        onSubmit={commentWriteSubmitHandler}
       >
         <textarea
           className="border p-2 rounded"
