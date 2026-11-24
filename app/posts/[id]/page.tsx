@@ -123,11 +123,17 @@ function PostCommentListItem({
       .catch((error) => alert(error.msg ?? error.message));
   };
 
-  if (modifyMode) {
-    return (
-      <li>
-        <form className="flex items-start gap-2" onSubmit={modifyPostComment}>
-          {comment.id} :
+  return (
+    <li className="flex items-start gap-2">
+      <span>{comment.id} :</span>
+      {!modifyMode && (
+        <span className="whitespace-pre-line">{comment.content}</span>
+      )}
+      {modifyMode && (
+        <form
+          className="flex flex-1 items-start gap-2"
+          onSubmit={modifyPostComment}
+        >
           <textarea
             className="border p-1.5 rounded flex-1"
             name="content"
@@ -138,17 +144,8 @@ function PostCommentListItem({
             autoFocus
           />
           <Button type="submit">저장</Button>
-          <Button onClick={toggleModifyMode}>취소</Button>
         </form>
-      </li>
-    );
-  }
-
-  return (
-    <li className="flex items-start gap-2">
-      <span className="whitespace-pre-line">
-        {comment.id} : {comment.content}
-      </span>
+      )}
       <Button onClick={deletePostComment}>delete</Button>
       <Button onClick={toggleModifyMode}>modify</Button>
     </li>
