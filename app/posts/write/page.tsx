@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@/app/components/Button";
-import { apiFetch } from "@/app/lib/backend/client";
+import { alertError, apiFetch } from "@/app/lib/backend/client";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
@@ -38,7 +38,7 @@ export default function Page() {
         alert(res.msg);
         router.replace(`/posts/${res.data.id}`);
       })
-      .catch((error) => alert(error.msg ?? error.message));
+      .catch(alertError);
   };
 
   return (

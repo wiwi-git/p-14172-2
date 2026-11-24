@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@/app/components/Button";
-import { apiFetch } from "@/app/lib/backend/client";
+import { alertError, apiFetch } from "@/app/lib/backend/client";
 import { PostWithContentDTO } from "@/app/type/post";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -16,7 +16,7 @@ export default function Page() {
     const id = Number(rawId);
     apiFetch(`/posts/${id}`)
       .then(setPost)
-      .catch((error) => alert(error.msg ?? error.message));
+      .catch(alertError);
   }, []);
 
   if (post == null) return Loading();
@@ -53,7 +53,7 @@ export default function Page() {
         alert(res.msg);
         router.replace(`/posts/${post.id}`);
       })
-      .catch((error) => alert(error.msg ?? error.message));
+      .catch(alertError);
   };
 
   return (

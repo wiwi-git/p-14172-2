@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { PostDTO } from "../type/post";
-import { apiFetch } from "../lib/backend/client";
+import { alertError, apiFetch } from "../lib/backend/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Button from "../components/Button";
@@ -12,7 +12,7 @@ export default function Page() {
   useEffect(() => {
     apiFetch("/posts")
       .then(setPosts)
-      .catch((error) => alert(error.msg ?? error.message));
+      .catch(alertError);
   }, []);
 
   const writePost = () => {

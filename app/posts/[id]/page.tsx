@@ -19,7 +19,10 @@ function PostInfo({
   const deletePost = () => {
     if (!confirm("글을 삭제 하시겠습니까?")) return;
 
-    _deletePost();
+    _deletePost((data) => {
+      alert(data.msg);
+      router.replace("/posts");
+    });
   };
 
   const editPost = () => {
@@ -63,9 +66,10 @@ function PostCommentWrite({
       return;
     }
 
-    _writePostComment(content)
-      .then(() => form.reset())
-      .catch((error) => alert(error.msg ?? error.message));
+    _writePostComment(content, (data) => {
+      alert(data.msg);
+      form.reset();
+    });
   };
 
   return (
@@ -99,7 +103,9 @@ function PostCommentListItem({
   const deletePostComment = () => {
     if (!confirm("댓글을 삭제 하시겠습니까?")) return;
 
-    _deletePostComment(comment.id);
+    _deletePostComment(comment.id, (data) => {
+      alert(data.msg);
+    });
   };
 
   const modifyPostComment = (event: React.SyntheticEvent<HTMLFormElement>) => {
@@ -118,9 +124,10 @@ function PostCommentListItem({
       return;
     }
 
-    _modifyPostComment(comment.id, content)
-      .then(() => setModifyMode(false))
-      .catch((error) => alert(error.msg ?? error.message));
+    _modifyPostComment(comment.id, content, (data) => {
+      alert(data.msg);
+      setModifyMode(false);
+    });
   };
 
   return (
