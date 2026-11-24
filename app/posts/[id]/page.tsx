@@ -44,6 +44,7 @@ function PostInfo({
 type PostCommentsProps = ReturnType<typeof usePostComments>;
 
 function PostCommentWrite({
+  postId,
   writePostComment: _writePostComment,
 }: PostCommentsProps) {
   const writePostComment = (event: React.SyntheticEvent<HTMLFormElement>) => {
@@ -69,7 +70,7 @@ function PostCommentWrite({
 
   return (
     <>
-      <h2 className="mt-[18px]">comment write</h2>
+      <h2 className="mt-[18px]">{postId}번 글에 대한 댓글 작성</h2>
       <form className="flex flex-col gap-2 p-2" onSubmit={writePostComment}>
         <textarea
           className="border p-2 rounded"
@@ -155,11 +156,13 @@ function PostCommentListItem({
 }
 
 function PostCommentList(props: PostCommentsProps) {
-  const { postComments } = props;
+  const { postId, postComments } = props;
 
   return (
     <>
-      <h2 className="mt-[18px] border-t pt-2">comment list</h2>
+      <h2 className="mt-[18px] border-t pt-2">
+        {postId}번 글에 대한 댓글 목록
+      </h2>
       {postComments != null && postComments.length == 0 && (
         <div>댓글이 없습니다.</div>
       )}

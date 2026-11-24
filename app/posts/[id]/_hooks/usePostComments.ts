@@ -54,6 +54,7 @@ export default function usePostComments(postId: number) {
   };
 
   return {
+    postId,
     postComments,
     writePostComment,
     modifyPostComment,
